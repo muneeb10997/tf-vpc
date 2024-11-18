@@ -1,17 +1,17 @@
 variable "identifier" {
-    description = "value for identifier"
-    type = string
+  description = "value for identifier"
+  type        = string
 }
 
 # vpc variables
 variable "vpc_cidr_block" {
-    description = "value for the vpc_cidr_block"
-    type = string
+  description = "value for the vpc_cidr_block"
+  type        = string
 }
 
 variable "vpc_name" {
-    description = "value for the vpc_name"
-    type = string
+  description = "value for the vpc_name"
+  type        = string
 }
 
 # # internet gateway variables
@@ -28,16 +28,16 @@ variable "vpc_name" {
 
 # subnet variables
 variable "subnets_cidr_block" {
-    description = "list for the  cidr_block"
-    type = list(string)
-    default = []
+  description = "list for the  cidr_block"
+  type        = list(string)
+  default     = []
 }
 
 variable "subnets_name" {
-    description = "list for subnets_name"
-    type = list(string)
-    default = []
-    
+  description = "list for subnets_name"
+  type        = list(string)
+  default     = []
+
 }
 
 # variable "public_subnet_2_cidr_block" {

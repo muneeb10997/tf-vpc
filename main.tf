@@ -1,12 +1,12 @@
 
 module "vpc" {
-  source                   = "./modules/vpc"
+  source = "./modules/vpc"
 
-  identifier               = var.identifier
-  vpc_cidr_block           = var.vpc_cidr_block
-  vpc_name                 = var.vpc_name
-  subnets_cidr_block= var.subnets_cidr_block
-  subnets_name=var.subnets_name
+  identifier         = var.identifier
+  vpc_cidr_block     = var.vpc_cidr_block
+  vpc_name           = var.vpc_name
+  subnets_cidr_block = var.subnets_cidr_block
+  subnets_name       = var.subnets_name
   # public_subnet_1_cidr_block = var.public_subnet_1_cidr_block
   # public_subnet_1_name       = var.public_subnet_1_name
   # public_subnet_2_cidr_block = var.public_subnet_2_cidr_block
