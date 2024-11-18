@@ -76,6 +76,29 @@ variable "application_subnet_2_name" {
 }
 #------------------------------------------------------------
 
+# data subnet variables
+#------------------------------------------------------------
+variable "data_subnet_1_cidr_block" {
+    description = "value for the data_subnet_1 cidr_block"
+    type = string
+}
+
+variable "data_subnet_1_name" {
+    description = "value for the data-subnet-1 name"
+    type = string
+}
+
+variable "data_subnet_2_cidr_block" {
+    description = "value for the data_subnet_1 cidr_block"
+    type = string
+}
+
+variable "data_subnet_2_name" {
+    description = "value for the data-subnet-1 name"
+    type = string
+}
+#------------------------------------------------------------
+
 # public route-table variables
 #------------------------------------------------------------
 variable "public_RT_name" {
@@ -87,7 +110,15 @@ variable "public_RT_name" {
 # application route-table variables
 #------------------------------------------------------------
 variable "applicaiton_RT_name" {
-    description = "value for the application_RT name"
+    description = "value for the data_RT name"
+    type = string
+}
+#------------------------------------------------------------
+
+# application route-table variables
+#------------------------------------------------------------
+variable "data_RT_name" {
+    description = "value for the data_RT name"
     type = string
 }
 #------------------------------------------------------------

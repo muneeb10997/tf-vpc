@@ -80,6 +80,7 @@ resource "aws_route_table_association" "b" {
 }
 #--------------------------------------------------------------------------------------
 
+
 # Application Subnets creation 
 #--------------------------------------------------------------------------------------
 # application subnet 1 
@@ -124,5 +125,53 @@ resource "aws_route_table_association" "c" {
 resource "aws_route_table_association" "d" {
   subnet_id      = aws_subnet.application_subnet_2.id
   route_table_id = aws_route_table.application_RT.id
+}
+#--------------------------------------------------------------------------------------
+
+
+# data Subnets creation 
+#--------------------------------------------------------------------------------------
+# data subnet 1 
+resource "aws_subnet" "data_subnet_1" {
+  vpc_id     = aws_vpc.vpc.id
+  cidr_block = var.data_subnet_1_cidr_block
+  availability_zone = data.aws_availability_zones.available.names[0]
+  tags = {
+    Name = "${var.identifier}-${var.data_subnet_1_name}-${terraform.workspace}"
+  }
+}
+# data Subnet 2
+resource "aws_subnet" "data_subnet_2" {
+  vpc_id     = aws_vpc.vpc.id
+  cidr_block = var.data_subnet_2_cidr_block
+  availability_zone = data.aws_availability_zones.available.names[1]
+  tags = {
+    Name = "${var.identifier}-${var.data_subnet_2_name}-${terraform.workspace}"
+  }
+}
+#--------------------------------------------------------------------------------------
+
+# data Subnet Route Table with Subnet assosiation
+#--------------------------------------------------------------------------------------
+
+# data route table creation 
+
+resource "aws_route_table" "data_RT" {
+  vpc_id = aws_vpc.vpc.id
+  tags = {
+    Name = "${var.identifier}-${var.data_RT_name}-${terraform.workspace}"
+  }
+}
+
+# subnet assosiations (data-subnet-1 , data-subnet-2)
+#--------------------------------------------------------------------------------------
+resource "aws_route_table_association" "e" {
+  subnet_id      = aws_subnet.data_subnet_1.id
+  route_table_id = aws_route_table.data_RT.id
+}
+
+resource "aws_route_table_association" "f" {
+  subnet_id      = aws_subnet.data_subnet_2.id
+  route_table_id = aws_route_table.data_RT.id
 }
 #--------------------------------------------------------------------------------------

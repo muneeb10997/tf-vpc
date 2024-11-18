@@ -8,6 +8,8 @@ cidr_route_igw="0.0.0.0/0"
 
 public_RT_name="public_rt"
 applicaiton_RT_name="application_rt"
+data_RT_name="data_rt"
+
 
 public_subnet_1_cidr_block="10.0.1.0/24"
 public_subnet_1_name="public_subnet_1"
@@ -18,4 +20,10 @@ application_subnet_1_cidr_block="10.0.3.0/24"
 application_subnet_1_name="application_subnet_1"
 application_subnet_2_cidr_block="10.0.4.0/24"
 application_subnet_2_name="application_subnet_2"
+
+data_subnet_1_cidr_block="10.0.5.0/24"
+data_subnet_1_name="data_subnet_1"
+data_subnet_2_cidr_block="10.0.6.0/24"
+data_subnet_2_name="data_subnet_2"
+
 
