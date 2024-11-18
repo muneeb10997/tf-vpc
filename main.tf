@@ -27,6 +27,4 @@ module "vpc" {
   public_RT_name           = var.public_RT_name
   applicaiton_RT_name           = var.applicaiton_RT_name
   data_RT_name=var.data_RT_name
-
-  
 }
