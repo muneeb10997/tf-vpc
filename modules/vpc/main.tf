@@ -17,7 +17,7 @@ resource "aws_subnet" "public_subnets" {
   cidr_block = "${var.public_subnets_cidr_block[count.index]}"
   availability_zone = data.aws_availability_zones.available.names[count.index]
   tags = {
-    Name = "${var.identifier}-${var.public_subnets_name[count.index]}-${terraform.workspace}"
+    Name = "${var.identifier}-public_subnets_${count.index}-${terraform.workspace}"
   }
 }
 # application subnets creation
@@ -27,7 +27,7 @@ resource "aws_subnet" "application_subnets" {
   cidr_block = "${var.application_subnets_cidr_block[count.index]}"
   availability_zone = data.aws_availability_zones.available.names[count.index]
   tags = {
-    Name = "${var.identifier}-${var.application_subnets_name[count.index]}-${terraform.workspace}"
+    Name = "${var.identifier}-application_subnets_${count.index}-${terraform.workspace}"
   }
 }
 # data subnets creation
@@ -37,15 +37,15 @@ resource "aws_subnet" "data_subnets" {
   cidr_block = "${var.data_subnets_cidr_block[count.index]}"
   availability_zone = data.aws_availability_zones.available.names[count.index]
   tags = {
-    Name = "${var.identifier}-${var.data_subnets_name[count.index]}-${terraform.workspace}"
+    Name = "${var.identifier}-data_subnets_${count.index}-${terraform.workspace}"
   }
 }
 # Internet Gateway
-resource "aws_internet_gateway" "IGW" {
+resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name = "${var.identifier}-${var.IGW_name}-${terraform.workspace}"
+    Name = "${var.identifier}-igw-${terraform.workspace}"
   }
 }
 # Public route table creation and adding internet gateway route
@@ -56,8 +56,8 @@ resource "aws_route_table" "public_RT" {
   }
   # route for internet gateway
   route {
-    cidr_block = var.cidr_route_igw
-    gateway_id = aws_internet_gateway.IGW.id
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
   }
 }
 # Application route table creation 
@@ -92,6 +92,3 @@ resource "aws_route_table_association" "data-sub-asso" {
   subnet_id      = aws_subnet.data_subnets[count.index].id
   route_table_id = aws_route_table.data_RT.id
 }
-
-
-
