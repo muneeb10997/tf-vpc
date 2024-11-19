@@ -2,30 +2,26 @@
 module "vpc" {
   source = "./modules/vpc"
 
-  identifier         = var.identifier
-  vpc_cidr_block     = var.vpc_cidr_block
-  vpc_name           = var.vpc_name
-  subnets_cidr_block = var.subnets_cidr_block
-  subnets_name       = var.subnets_name
-  # public_subnet_1_cidr_block = var.public_subnet_1_cidr_block
-  # public_subnet_1_name       = var.public_subnet_1_name
-  # public_subnet_2_cidr_block = var.public_subnet_2_cidr_block
-  # public_subnet_2_name       = var.public_subnet_2_name
+  identifier     = var.identifier
 
-  # application_subnet_1_cidr_block = var.application_subnet_1_cidr_block
-  # application_subnet_1_name       = var.application_subnet_1_name
-  # application_subnet_2_cidr_block = var.application_subnet_2_cidr_block
-  # application_subnet_2_name       = var.application_subnet_2_name
+  vpc_cidr_block = var.vpc_cidr_block
+  vpc_name       = var.vpc_name
 
-  # data_subnet_1_cidr_block = var.data_subnet_1_cidr_block
-  # data_subnet_1_name       = var.data_subnet_1_name
-  # data_subnet_2_cidr_block = var.data_subnet_2_cidr_block
-  # data_subnet_2_name       = var.data_subnet_2_name
+  public_subnets_cidr_block = var.public_subnets_cidr_block
+  public_subnets_name       = var.public_subnets_name
 
-  # IGW_name                 = var.IGW_name
-  # cidr_route_igw = var.cidr_route_igw
+  application_subnets_cidr_block = var.application_subnets_cidr_block
+  application_subnets_name       = var.application_subnets_name
 
-  # public_RT_name           = var.public_RT_name
-  # applicaiton_RT_name           = var.applicaiton_RT_name
-  # data_RT_name=var.data_RT_name
+  data_subnets_cidr_block = var.data_subnets_cidr_block
+  data_subnets_name       = var.data_subnets_name
+
+  IGW_name       = var.IGW_name
+  cidr_route_igw = var.cidr_route_igw
+
+  public_RT_name      = var.public_RT_name
+
+  application_RT_name = var.application_RT_name
+
+  data_RT_name        = var.data_RT_name 
 }
