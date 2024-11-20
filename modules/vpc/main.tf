@@ -16,7 +16,8 @@ resource "aws_subnet" "public_subnets" {
   vpc_id     = aws_vpc.vpc.id
   count      = "${length(var.public_subnets_cidr_block)}"
   cidr_block = "${var.public_subnets_cidr_block[count.index]}"
-  availability_zone = data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]  
+  availability_zone = data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)] 
+  map_public_ip_on_launch = true
   tags = {
     Name = "${var.identifier}-public_subnets_${count.index}-${terraform.workspace}"
   }
