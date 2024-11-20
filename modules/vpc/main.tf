@@ -2,7 +2,7 @@
 resource "aws_vpc" "vpc" {
   cidr_block = var.vpc_cidr_block
    tags = {
-    Name = "${var.identifier}-${var.vpc_name}-${terraform.workspace}"
+    Name = "${var.identifier}-vpc-${terraform.workspace}"
   }
 }
 
@@ -55,6 +55,7 @@ resource "aws_internet_gateway" "igw" {
 
 # eni for nat gateway
 resource "aws_eip" "nat-eip" {
+  count= var.enable_nat == true ? 1 : 0
   domain = "vpc"
   tags = {
     Name="${var.identifier}-nat_eip-${terraform.workspace}"
@@ -62,16 +63,14 @@ resource "aws_eip" "nat-eip" {
 }
 # nat-gateway
 resource "aws_nat_gateway" "nat" {
-  allocation_id = aws_eip.nat-eip.id
+  count= var.enable_nat == true ? 1 : 0
+  allocation_id = aws_eip.nat-eip[0].id
   subnet_id     = aws_subnet.public_subnets[0].id
-
   tags = {
     Name = "${var.identifier}-nat-${terraform.workspace}"
   }
-
   depends_on = [aws_internet_gateway.igw]
 }
-
 
 # Public route table creation and adding internet gateway route
 resource "aws_route_table" "public_RT" {
@@ -79,11 +78,17 @@ resource "aws_route_table" "public_RT" {
   tags = {
     Name = "${var.identifier}-public_RT-${terraform.workspace}"
   }
-  # route for internet gateway
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.igw.id
-  }
+  # # route for internet gateway
+  # route {
+  #   cidr_block = "0.0.0.0/0"
+  #   gateway_id = aws_internet_gateway.igw.id
+  # }
+}
+
+resource "aws_route" "igw_route" {
+  route_table_id = aws_route_table.public_RT.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id = aws_internet_gateway.igw.id
 }
 
 # Application route table creation 
@@ -93,11 +98,22 @@ resource "aws_route_table" "application_RT" {
     Name = "${var.identifier}-application_RT-${terraform.workspace}"
   }
   # route for nat gateway
-  route {
-    cidr_block = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat.id
-  }
+  # route {
+  #   cidr_block = var.enable_nat == true ? "0.0.0.0/0" : null
+  #   nat_gateway_id = var.enable_nat == true ? aws_nat_gateway.nat[0].id : null
+  # }
 }
+
+# route for nat gateway
+
+resource "aws_route" "nat_route" {
+    count= var.enable_nat == true ? 1 : 0
+    route_table_id = aws_route_table.application_RT.id
+    nat_gateway_id = aws_nat_gateway.nat[0].id
+    destination_cidr_block = "0.0.0.0/0"  
+}
+
+
 
 # data route table creation 
 resource "aws_route_table" "data_RT" {

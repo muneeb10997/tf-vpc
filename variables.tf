@@ -4,15 +4,12 @@ variable "identifier" {
   type        = string
 }
 
-# vpc variables
+# vpc cidr
 variable "vpc_cidr_block" {
   description = "value for the vpc_cidr_block"
   type        = string
 }
-variable "vpc_name" {
-  description = "value for the vpc_name"
-  type        = string
-}
+
 
 # public_subnets variables
 variable "public_subnets_cidr_block" {
@@ -33,4 +30,10 @@ variable "data_subnets_cidr_block" {
     description = "list for data_subnets_cidr_block"
     type = list(string)
     default = []
+}
+
+# nat check variable
+variable "enable_nat"{
+    type = bool
+    default = false
 }
