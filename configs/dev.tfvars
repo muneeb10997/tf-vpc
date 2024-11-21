@@ -11,5 +11,12 @@ data_subnets_cidr_block=["10.0.11.0/24","10.0.12.0/24"]
 # enable_nat = "true"
 
 
+# public instance security groups variables
+
+cidr_ipv4_http  = "0.0.0.0/0"
+cidr_ipv4_https = "0.0.0.0/0"
+cidr_ipv4_ssh   = "0.0.0.0/0"
+
+
 #ec2 variables for dev enviroment
 # ami = "ami-0866a3c8686eaeeba"

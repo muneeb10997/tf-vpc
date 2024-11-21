@@ -79,13 +79,8 @@ resource "aws_route_table" "public_RT" {
   tags = {
     Name = "${var.identifier}-public_RT-${terraform.workspace}"
   }
-  # # route for internet gateway
-  # route {
-  #   cidr_block = "0.0.0.0/0"
-  #   gateway_id = aws_internet_gateway.igw.id
-  # }
 }
-
+#route for internet gateway
 resource "aws_route" "igw_route" {
   route_table_id = aws_route_table.public_RT.id
   destination_cidr_block = "0.0.0.0/0"
@@ -98,22 +93,14 @@ resource "aws_route_table" "application_RT" {
   tags = {
     Name = "${var.identifier}-application_RT-${terraform.workspace}"
   }
-  # route for nat gateway
-  # route {
-  #   cidr_block = var.enable_nat == true ? "0.0.0.0/0" : null
-  #   nat_gateway_id = var.enable_nat == true ? aws_nat_gateway.nat[0].id : null
-  # }
 }
-
 # route for nat gateway
-
 resource "aws_route" "nat_route" {
     count= var.enable_nat == true ? 1 : 0
     route_table_id = aws_route_table.application_RT.id
     nat_gateway_id = aws_nat_gateway.nat[0].id
     destination_cidr_block = "0.0.0.0/0"  
 }
-
 
 
 # data route table creation 
