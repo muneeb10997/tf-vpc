@@ -9,3 +9,7 @@ application_subnets_cidr_block=["10.0.10.0/24"]
 data_subnets_cidr_block=["10.0.11.0/24","10.0.12.0/24"]
 
 # enable_nat = "true"
+
+
+#ec2 variables for dev enviroment
+# ami = "ami-0866a3c8686eaeeba"

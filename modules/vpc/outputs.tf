@@ -1,3 +1,8 @@
+output "identifier" {
+  description = "identifier name"
+  value = var.identifier
+}
+
 output "vpc_id" {
   description = "The VPC ID"
   value       = aws_vpc.vpc.id

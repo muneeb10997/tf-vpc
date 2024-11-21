@@ -37,3 +37,9 @@ variable "enable_nat"{
     type = bool
     default = false
 }
+
+variable "ami" {
+  type = string
+  default = " "
+  
+}
