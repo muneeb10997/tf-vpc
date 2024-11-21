@@ -8,17 +8,79 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "cidr_ipv4_http" {
+
+# public security group variables
+variable "ingress_cidr_blocks_public" {
   description = "inbound cidr for http"
-  type = string
+  type = list(string)
+  default = [ ]
 }
 
-variable "cidr_ipv4_https" {
-  description = "inbound cidr for https"
-  type = string
+variable "ingress_from_ports_public" {
+  description = "inbound cidr for http"
+  type = list(string)
+  default = [ ]
 }
 
-variable "cidr_ipv4_ssh" {
-  description = "inbound cidr for ssh"
-  type = string
+variable "ingress_to_ports_public" {
+  description = "inbound cidr for http"
+  type = list(string)
+  default = [ ]
+}
+
+variable "ingress_protocols_public" {
+  description = "inbound cidr for http"
+  type = list(string)
+  default = [ ]
+}
+
+# application security group variables
+variable "ingress_cidr_blocks_application" {
+  description = "inbound cidr for http"
+  type = list(string)
+  default = [ ]
+}
+
+variable "ingress_from_ports_application" {
+  description = "inbound cidr for http"
+  type = list(string)
+  default = [ ]
+}
+
+variable "ingress_to_ports_application" {
+  description = "inbound cidr for http"
+  type = list(string)
+  default = [ ]
+}
+
+variable "ingress_protocols_application" {
+  description = "inbound cidr for http"
+  type = list(string)
+  default = [ ]
+}
+
+
+# data security group variabbles
+variable "ingress_cidr_blocks_data" {
+  description = "inbound cidr for http"
+  type = list(string)
+  default = [ ]
+}
+
+variable "ingress_from_ports_data" {
+  description = "inbound cidr for http"
+  type = list(string)
+  default = [ ]
+}
+
+variable "ingress_to_ports_data" {
+  description = "inbound cidr for http"
+  type = list(string)
+  default = [ ]
+}
+
+variable "ingress_protocols_data" {
+  description = "inbound cidr for http"
+  type = list(string)
+  default = [ ]
 }
