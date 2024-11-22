@@ -1,91 +1,62 @@
-#public security group
-resource "aws_security_group" "public_ec2_sg" {
-   vpc_id = var.vpc_id
-   tags = {
-     Name = "${var.identifier}-public_ec2_sg-${terraform.workspace}"
-   } 
-  egress {
-  from_port   = 0
-  to_port     = 0
-  protocol    = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
-}
-}
+#security group using list of object 
+# resource "aws_security_group" "SG" {
+#   for_each = { for i in var.security_groups : i.name => i }
 
-resource "aws_security_group_rule" "ingress_rules_public" {
-  type              = "ingress"
-  security_group_id = aws_security_group.public_ec2_sg.id
-  count      = "${length(var.ingress_cidr_blocks_public)}"
-  cidr_blocks = [var.ingress_cidr_blocks_public[count.index]]
-  from_port = "${var.ingress_from_ports_public[count.index]}"  
-  to_port = "${var.ingress_to_ports_public[count.index]}"  
-  protocol = "${var.ingress_protocols_public[count.index]}"  
-  }
+#   vpc_id = var.vpc_id
+#   tags = {
+#     Name = "${var.identifier}-${each.key}-${terraform.workspace}"
+#   }
 
-#application security group
-resource "aws_security_group" "application_ec2_sg" {
-   vpc_id = var.vpc_id
-   tags = {
-     Name = "${var.identifier}-application_ec2_sg-${terraform.workspace}"
-   } 
-  egress {
-  from_port   = 0
-  to_port     = 0
-  protocol    = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
-}
-}
-resource "aws_security_group_rule" "ingress_rules_application" {
-  type              = "ingress"
-  security_group_id = aws_security_group.application_ec2_sg.id
-  count      = "${length(var.ingress_cidr_blocks_application)}"
-  cidr_blocks = [var.ingress_cidr_blocks_application[count.index]]
-  from_port = "${var.ingress_from_ports_application[count.index]}"  
-  to_port = "${var.ingress_to_ports_application[count.index]}"  
-  protocol = "${var.ingress_protocols_application[count.index]}"
-  # source_security_group_id = aws_security_group.public_ec2_sg.id
-  }
-
-# data security group
-resource "aws_security_group" "data_ec2_sg" {
-   vpc_id = var.vpc_id
-   tags = {
-     Name = "${var.identifier}-data_ec2_sg-${terraform.workspace}"
-   } 
-  egress {
-  from_port   = 0
-  to_port     = 0
-  protocol    = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
-}
-}
-resource "aws_security_group_rule" "ingress_rules_data" {
-  type              = "ingress"
-  security_group_id = aws_security_group.data_ec2_sg.id
-  count      = "${length(var.ingress_cidr_blocks_data)}"
-  cidr_blocks = [var.ingress_cidr_blocks_data[count.index]]
-  from_port = "${var.ingress_from_ports_data[count.index]}"  
-  to_port = "${var.ingress_to_ports_data[count.index]}"  
-  protocol = "${var.ingress_protocols_data[count.index]}"  
-  }
- # security_group_id = aws_security_group.public_ec2_sg.id
-  # cidr_ipv4 = var.cidr_ipv4_http
-  # from_port = 80
-  # ip_protocol = "tcp"
-  # to_port = 80
-
-# resource "aws_vpc_security_group_ingress_rule" "HTTPS" {
-#   security_group_id = aws_security_group.public_ec2_sg.id
-#   cidr_ipv4 = var.cidr_ipv4_https
-#   from_port = 443
-#   ip_protocol = "tcp"
-#   to_port = 443
+#   egress {
+#     from_port   = 0
+#     to_port     = 0
+#     protocol    = "-1"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
 # }
 
-# resource "aws_vpc_security_group_ingress_rule" "SSH" {
-#   security_group_id = aws_security_group.public_ec2_sg.id
-#   cidr_ipv4 = var.cidr_ipv4_ssh
-#   from_port = 22
-#   ip_protocol = "tcp"
-#   to_port = 22
+
+# ingress rules using list of objects
+# resource "aws_security_group_rule" "ingress_rules" {
+#   for_each = { 
+#     for sg in var.security_groups : sg.name => sg.ingress_rules
+#   }
+
+#   type              = "ingress"
+#   security_group_id = aws_security_group.SG[each.key].id
+
+#   cidr_blocks = [each.value[0].cidr_block]
+#   from_port   = each.value[0].from_port
+#   to_port     = each.value[0].to_port
+#   protocol    = each.value[0].protocol
 # }
+
+
+#security group using map of object 
+resource "aws_security_group" "SG" {
+  for_each = var.security_groups
+
+  vpc_id = var.vpc_id
+  tags = {
+    Name = "${var.identifier}-${each.key}-${terraform.workspace}"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group_rule" "ingress_rules" {
+  for_each = { for sg_name, sg in var.security_groups : sg_name => sg.ingress_rules }
+
+  type              = "ingress"
+  security_group_id = aws_security_group.SG[each.key].id  
+# cidr_blocks = [each.value[0].cidr_block]  
+  cidr_blocks = [for rule in each.value : rule.cidr_block]  
+  from_port   = each.value[0].from_port 
+  to_port     = each.value[0].to_port
+  protocol    = each.value[0].protocol
+}

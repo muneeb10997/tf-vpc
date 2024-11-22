@@ -19,21 +19,9 @@ module "security_groups" {
   source = "./modules/security-groups"
   vpc_id  = module.vpc.vpc_id
   identifier = module.vpc.identifier
+  security_groups=var.security_groups
+  
 
-  ingress_cidr_blocks_public=var.ingress_cidr_blocks_public
-  ingress_from_ports_public=var.ingress_from_ports_public
-  ingress_to_ports_public=var.ingress_to_ports_public
-  ingress_protocols_public=var.ingress_protocols_public
-
-  ingress_cidr_blocks_application=var.ingress_cidr_blocks_application
-  ingress_from_ports_application=var.ingress_from_ports_application
-  ingress_to_ports_application=var.ingress_to_ports_application
-  ingress_protocols_application=var.ingress_protocols_application
-
-  ingress_cidr_blocks_data=var.ingress_cidr_blocks_data
-  ingress_from_ports_data=var.ingress_from_ports_data
-  ingress_to_ports_data=var.ingress_to_ports_data
-  ingress_protocols_data=var.ingress_protocols_data
 }
 
 # module "ec2" {

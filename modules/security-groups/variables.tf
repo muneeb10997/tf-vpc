@@ -3,84 +3,37 @@ variable "identifier" {
     description = "value for identifier"
     type = string
 }
+
+# variable for vpc_id 
 variable "vpc_id" {
   description = "getting vpc id"
   type        = string
 }
 
-
-# public security group variables
-variable "ingress_cidr_blocks_public" {
-  description = "inbound cidr for http"
-  type = list(string)
-  default = [ ]
-}
-
-variable "ingress_from_ports_public" {
-  description = "inbound cidr for http"
-  type = list(string)
-  default = [ ]
-}
-
-variable "ingress_to_ports_public" {
-  description = "inbound cidr for http"
-  type = list(string)
-  default = [ ]
-}
-
-variable "ingress_protocols_public" {
-  description = "inbound cidr for http"
-  type = list(string)
-  default = [ ]
-}
-
-# application security group variables
-variable "ingress_cidr_blocks_application" {
-  description = "inbound cidr for http"
-  type = list(string)
-  default = [ ]
-}
-
-variable "ingress_from_ports_application" {
-  description = "inbound cidr for http"
-  type = list(string)
-  default = [ ]
-}
-
-variable "ingress_to_ports_application" {
-  description = "inbound cidr for http"
-  type = list(string)
-  default = [ ]
-}
-
-variable "ingress_protocols_application" {
-  description = "inbound cidr for http"
-  type = list(string)
-  default = [ ]
-}
+# variable for multiple security groups creation 
+# in this list of object for names and multiple ingress rules for each 
+# variable "security_groups" {
+#   description = "using list of objects "
+  # type = list(object({
+  #   name          = string
+  #   ingress_rules = list(object({
+  #     cidr_block    = string
+  #     from_port     = number
+  #     to_port       = number
+  #     # protocol      = string
+  #   }))
+  # }))
+# }
 
 
-# data security group variabbles
-variable "ingress_cidr_blocks_data" {
-  description = "inbound cidr for http"
-  type = list(string)
-  default = [ ]
-}
-
-variable "ingress_from_ports_data" {
-  description = "inbound cidr for http"
-  type = list(string)
-  default = [ ]
-}
-
-variable "ingress_to_ports_data" {
-  description = "inbound cidr for http"
-  type = list(string)
-  default = [ ]
-}
-
-variable "ingress_protocols_data" {
-  description = "inbound cidr for http"
-  type = list(string)
-  default = [ ]
+variable "security_groups" {
+  description = "using list of maps"
+  type = map(object({
+    ingress_rules = list(object({
+      cidr_block    = string
+      from_port     = number
+      to_port       = number
+      protocol      = string
+    }))
+  }))
 }
