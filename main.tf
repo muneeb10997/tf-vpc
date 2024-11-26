@@ -19,9 +19,7 @@ module "security_groups" {
   source = "./modules/security-groups"
   vpc_id  = module.vpc.vpc_id
   identifier = module.vpc.identifier
-  security_groups=var.security_groups
-  
-
+  security_groups = var.security_groups
 }
 
 # module "ec2" {

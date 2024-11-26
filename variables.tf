@@ -39,30 +39,22 @@ variable "enable_nat"{
 }
 
 
-# variable for multiple security groups creation 
-# in this list of object for names and multiple ingress rules for each 
-# variable "security_groups" {
-#   description = "using list of objects"
-#   type = list(object({
-#     name          = string
-#     ingress_rules = list(object({
-#       cidr_block    = string
-#       from_port     = number
-#       to_port       = number
-#       protocol      = string
-#     }))
-#   }))
-# }
-
-
+# Define the variable for security groups
 variable "security_groups" {
-  description = "using list of maps"
   type = map(object({
     ingress_rules = list(object({
-      cidr_block    = string
-      from_port     = number
-      to_port       = number
-      protocol      = string
+      cidr_ipv4         = optional(string)
+      from_port         = number
+      ip_protocol       = string
+      to_port           = number
+      source_sg_id      = optional(string) 
+    }))
+    egress_rules = list(object({
+      cidr_ipv4         = optional(string)
+      from_port         = number
+      ip_protocol       = string
+      to_port           = number
+      destination_sg_id = optional(string) 
     }))
   }))
 }

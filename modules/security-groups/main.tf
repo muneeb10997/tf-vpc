@@ -1,62 +1,38 @@
-#security group using list of object 
-# resource "aws_security_group" "SG" {
-#   for_each = { for i in var.security_groups : i.name => i }
-
-#   vpc_id = var.vpc_id
-#   tags = {
-#     Name = "${var.identifier}-${each.key}-${terraform.workspace}"
-#   }
-
-#   egress {
-#     from_port   = 0
-#     to_port     = 0
-#     protocol    = "-1"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-# }
-
-
-# ingress rules using list of objects
-# resource "aws_security_group_rule" "ingress_rules" {
-#   for_each = { 
-#     for sg in var.security_groups : sg.name => sg.ingress_rules
-#   }
-
-#   type              = "ingress"
-#   security_group_id = aws_security_group.SG[each.key].id
-
-#   cidr_blocks = [each.value[0].cidr_block]
-#   from_port   = each.value[0].from_port
-#   to_port     = each.value[0].to_port
-#   protocol    = each.value[0].protocol
-# }
-
-
-#security group using map of object 
-resource "aws_security_group" "SG" {
+# Define the security group with for_each
+resource "aws_security_group" "sg" {
   for_each = var.security_groups
+  name     = each.key
+  vpc_id   = var.vpc_id
 
-  vpc_id = var.vpc_id
+  # Ingress rules
+  dynamic "ingress" {
+    for_each = each.value.ingress_rules
+    content {
+      from_port   = ingress.value.from_port
+      to_port     = ingress.value.to_port
+      protocol    = ingress.value.ip_protocol
+
+      # Add either CIDR block or source security group
+      cidr_blocks       = ingress.value.cidr_ipv4 != null ? [ingress.value.cidr_ipv4] : []
+      security_groups   = ingress.value.source_sg_id != null ? [ingress.value.source_sg_id] : []
+    }
+  }
+
+  # Egress rules
+  dynamic "egress" {
+    for_each = each.value.egress_rules
+    content {
+      from_port   = egress.value.from_port
+      to_port     = egress.value.to_port
+      protocol    = egress.value.ip_protocol
+
+      # Add either CIDR block or destination security group
+      cidr_blocks       = egress.value.cidr_ipv4 != null ? [egress.value.cidr_ipv4] : []
+      security_groups   = egress.value.destination_sg_id != null ? [egress.value.destination_sg_id] : []
+    }
+  }
+  
   tags = {
     Name = "${var.identifier}-${each.key}-${terraform.workspace}"
   }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-resource "aws_security_group_rule" "ingress_rules" {
-  for_each = { for sg_name, sg in var.security_groups : sg_name => sg.ingress_rules }
-
-  type              = "ingress"
-  security_group_id = aws_security_group.SG[each.key].id  
-# cidr_blocks = [each.value[0].cidr_block]  
-  cidr_blocks = [for rule in each.value : rule.cidr_block]  
-  from_port   = each.value[0].from_port 
-  to_port     = each.value[0].to_port
-  protocol    = each.value[0].protocol
 }
