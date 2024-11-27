@@ -15,19 +15,35 @@ module "vpc" {
   # enable_nat = var.enable_nat
 }
 
-module "security_groups" {
-  source = "./modules/security-groups"
-  vpc_id  = module.vpc.vpc_id
-  identifier = module.vpc.identifier
-  security_groups = var.security_groups
+module "security_group_1" {
+  source                 = "./modules/security-groups"
+  identifier = var.identifier
+  vpc_id                 = module.vpc.vpc_id
+  security_group_name    = var.first_security_group_name
+  ingress_rules          = var.first_sg_ingress_rules
+  egress_rules           = var.first_sg_egress_rules
 }
 
+
+module "security_group_2" {
+  source                 = "./modules/security-groups"
+  identifier = var.identifier
+  vpc_id                 = module.vpc.vpc_id
+  security_group_name    = var.second_security_group_name
+  source_security_group_id = module.security_group_1.security_group_id
+  ingress_rules          = var.second_sg_ingress_rules
+  egress_rules           = var.second_sg_egress_rules
+}
 # module "ec2" {
 #   source = "./modules/ec2"
 #   identifier = module.vpc.identifier
-#   public_subnets_ids = module.vpc.public_subnets_ids
-#   public_ec2_sg_id = module.security_groups.public_ec2_sg_id
-  
+#   ami = var.ami
+#   instance_type = var.instance_type
+#   subnet_id = module.vpc.public_subnets[0].id
+#   security_groups = module.security_groups.sg.id
+#   key_name = var.key_name
+#   name = var.name
+#   associate_public_ip_address = var.associate_public_ip_address
 # }
 
 

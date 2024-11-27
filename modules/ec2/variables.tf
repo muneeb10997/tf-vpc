@@ -4,14 +4,30 @@ variable "identifier" {
     type = string
 }
 
-variable "public_subnets_ids" {
-  description = "getting list for public_subnets_ids"
-    type = list(string)
-    default = [] 
-  
+
+variable "ami" {
+    type        = string  
+}
+variable "instance_type" {
+  type        = string
 }
 
-variable "public_ec2_sg_id" {
-  description = "public security group id"
+variable "subnet_id" {
+  type        = string
+}
+
+variable "security_groups" {
+  type        = list(string)
+}
+
+variable "associate_public_ip_address" {
+  type        = bool
+}
+
+variable "name" {
+  type        = string
+}
+
+variable "key_name" {
   type        = string
 }

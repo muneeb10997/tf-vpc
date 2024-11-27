@@ -11,72 +11,61 @@ data_subnets_cidr_block=["10.0.11.0/24","10.0.12.0/24"]
 # enable_nat = "true"
 
 # security groups variables
-security_groups = {
-  public_sg = {
-    ingress_rules = [
-      {
-        cidr_ipv4   = "0.0.0.0/0"
-        from_port   = 80
-        ip_protocol = "tcp"
-        to_port     = 80
-      },
-      {
-        cidr_ipv4   = "0.0.0.0/0"
-        from_port   = 443
-        ip_protocol = "tcp"
-        to_port     = 443
-      },
-      {
-        cidr_ipv4   = "0.0.0.0/0"
-        from_port   = 22
-        ip_protocol = "tcp"
-        to_port     = 22
-      },
-    ]
-    egress_rules = [
-      {
-        cidr_ipv4   = "0.0.0.0/0"
-        from_port   = 0
-        ip_protocol = "-1" # All protocols
-        to_port     = 0
-      }
-    ]
+first_security_group_name = "public-sg"
+
+first_sg_ingress_rules = [
+  {
+    cidr_blocks              = ["0.0.0.0/0"]
+    from_port                = 22
+    protocol                 = "tcp"
+    to_port                  = 22
   },
-  application_sg = {
-    ingress_rules = [
-      {
-        cidr_ipv4   = "0.0.0.0/0"
-        from_port   = 80
-        ip_protocol = "tcp"
-        to_port     = 80
-      },
-      {
-        cidr_ipv4   = "0.0.0.0/0"
-        from_port   = 443
-        ip_protocol = "tcp"
-        to_port     = 443
-      },
-      {
-        cidr_ipv4   = "0.0.0.0/0"
-        from_port   = 22
-        ip_protocol = "tcp"
-        to_port     = 22
-      },
-      {
-        # cidr_ipv4   = "0.0.0.0/0"
-        source_sg_id = "sg-012dedc2f0c42223a"
-        from_port   = 5000
-        ip_protocol = "tcp"
-        to_port     = 5000
-      }
-    ]
-    egress_rules = [
-      {
-        cidr_ipv4   = "0.0.0.0/0"
-        from_port   = 0
-        ip_protocol = "-1" # All protocols
-        to_port     = 0
-      }
-    ]
+  {
+    cidr_blocks              = ["0.0.0.0/0"]
+    from_port                = 80
+    protocol                 = "tcp"
+    to_port                  = 80
   }
-}
+]
+
+first_sg_egress_rules = [
+  {
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 0
+    protocol    = "-1"
+    to_port     = 0
+  }
+]
+
+second_security_group_name = "application-sg"
+
+second_sg_ingress_rules = [
+  {
+    cidr_blocks              = ["0.0.0.0/0"]
+    from_port                = 22
+    protocol                 = "tcp"
+    to_port                  = 22
+  },
+  {
+    # cidr_blocks              = [ ]
+    from_port                = 5000
+    protocol                 = "tcp"
+    to_port                  = 5000
+    source_security_group_id = ""
+  }
+]
+
+second_sg_egress_rules = [
+  {
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 0
+    protocol    = "-1"
+    to_port     = 0
+  }
+]
+# # nginx server instance
+# ami                         = "ami-0866a3c8686eaeeba"  
+# instance_type               = "t2.micro"
+# key_name                    = "public-key"
+# associate_public_ip_address = true
+# name = "nginx-server"
