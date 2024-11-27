@@ -16,8 +16,8 @@ resource "aws_security_group_rule" "ingress" {
   protocol                 = var.ingress_rules[count.index].protocol
   from_port                = var.ingress_rules[count.index].from_port
   to_port                  = var.ingress_rules[count.index].to_port
-  cidr_blocks              = var.ingress_rules[count.index].cidr_blocks != null && length(var.ingress_rules[count.index].cidr_blocks) > 0 ? var.ingress_rules[count.index].cidr_blocks : null
-  source_security_group_id = var.ingress_rules[count.index].source_security_group_id != "" ? var.ingress_rules[count.index].source_security_group_id : null
+  cidr_blocks              = var.ingress_rules[count.index].cidr_blocks !=  [ ] ? var.ingress_rules[count.index].cidr_blocks : null
+  source_security_group_id = var.ingress_rules[count.index].source_security_group_id == "" ? var.ingress_rules[count.index].source_security_group_id : null
 }
 
 # Dynamic Egress Rules
