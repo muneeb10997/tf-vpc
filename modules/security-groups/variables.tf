@@ -1,7 +1,7 @@
 # application identifier
 variable "identifier" {
-    description = "value for identifier"
-    type = string
+  description = "value for identifier"
+  type        = string
 }
 
 # variable for vpc_id 
@@ -16,8 +16,8 @@ variable "security_group_name" {
   type        = string
 }
 variable "rules" {
-  type        = list(object({
-    type = string
+  type = list(object({
+    type                     = string
     cidr_blocks              = optional(list(string))
     source_security_group_id = string
     from_port                = number

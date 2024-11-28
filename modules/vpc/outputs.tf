@@ -1,6 +1,6 @@
 output "identifier" {
   description = "identifier name"
-  value = var.identifier
+  value       = var.identifier
 }
 
 output "vpc_id" {

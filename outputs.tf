@@ -20,3 +20,7 @@ output "application_security_group_id" {
   value       = module.application_security_group.security_group_id
 }
 
+output "instance_public_ip" {
+  value = module.instance.instance_public_ip
+}
+

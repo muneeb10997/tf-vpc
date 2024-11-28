@@ -1,16 +1,11 @@
+# vpc module for creating vpc,subnets,route tables,igw,nat with condition
 module "vpc" {
-  source = "./modules/vpc"
-
-  identifier = var.identifier
-
-  vpc_cidr_block = var.vpc_cidr_block
-
-  public_subnets_cidr_block = var.public_subnets_cidr_block
-
+  source                         = "./modules/vpc"
+  identifier                     = var.identifier
+  vpc_cidr_block                 = var.vpc_cidr_block
+  public_subnets_cidr_block      = var.public_subnets_cidr_block
   application_subnets_cidr_block = var.application_subnets_cidr_block
-
-  data_subnets_cidr_block = var.data_subnets_cidr_block
-
+  data_subnets_cidr_block        = var.data_subnets_cidr_block
   # enable_nat = var.enable_nat
 }
 
@@ -34,7 +29,7 @@ module "application_security_group" {
   depends_on               = [module.public_security_group]
 }
 
-
+# creating instance form instance module along with user_data 
 module "instance" {
   source                      = "./modules/instance"
   identifier                  = var.identifier
@@ -42,9 +37,9 @@ module "instance" {
   ami                         = var.ami
   instance_type               = var.instance_type
   key_name                    = var.key_name
-  user_data = var.user_data
+  user_data                   = file("./user_data.sh")
   subnet_id                   = module.vpc.public_subnets_ids[0]
   vpc_security_group_ids      = [module.public_security_group.security_group_id]
   associate_public_ip_address = var.associate_public_ip_address
-  depends_on = [ module.public_security_group,module.vpc ]
+  depends_on                  = [module.public_security_group, module.vpc]
 }

@@ -1,32 +1,32 @@
 # application identifier
 variable "identifier" {
-    description = "value for identifier"
-    type = string
+  description = "value for identifier"
+  type        = string
 }
 
 variable "name_instance" {
   type = string
 }
 variable "ami" {
-    type        = string  
+  type = string
 }
 variable "instance_type" {
-  type        = string
+  type = string
 }
 variable "key_name" {
-   type = string  
+  type = string
 }
 
 variable "subnet_id" {
-  type        = string
+  type = string
 }
 
 variable "vpc_security_group_ids" {
-  type        = list(string)
+  type = list(string)
 }
 
 variable "associate_public_ip_address" {
-  type        = bool
+  type = bool
 }
 
 variable "user_data" {

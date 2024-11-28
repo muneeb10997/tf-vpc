@@ -9,7 +9,7 @@ resource "aws_security_group" "sg" {
 
 # Dynamic Rules
 resource "aws_security_group_rule" "rules" {
-  count = length(var.rules)
+  count                    = length(var.rules)
   security_group_id        = aws_security_group.sg.id
   type                     = var.rules[count.index].type
   protocol                 = var.rules[count.index].protocol

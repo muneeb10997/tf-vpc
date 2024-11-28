@@ -86,6 +86,6 @@ variable "associate_public_ip_address" {
   type = bool
 }
 
-variable "user_data" {
-  type = string
-}
+# variable "user_data" {
+#   type = string
+# }
