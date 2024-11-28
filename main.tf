@@ -35,4 +35,16 @@ module "application_security_group" {
 }
 
 
-
+module "instance" {
+  source                      = "./modules/instance"
+  identifier                  = var.identifier
+  name_instance               = var.name_instance
+  ami                         = var.ami
+  instance_type               = var.instance_type
+  key_name                    = var.key_name
+  user_data = var.user_data
+  subnet_id                   = module.vpc.public_subnets_ids[0]
+  vpc_security_group_ids      = [module.public_security_group.security_group_id]
+  associate_public_ip_address = var.associate_public_ip_address
+  depends_on = [ module.public_security_group,module.vpc ]
+}

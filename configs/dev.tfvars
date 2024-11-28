@@ -84,3 +84,19 @@ application_sg_rules = [
     to_port     = 0
   }
 ]
+
+
+# instance creation in a vpc public subnet along with attaching security group
+
+name_instance= "nginx"
+ami = "ami-0866a3c8686eaeeba"
+instance_type="t2.micro"
+key_name = "public-key"
+associate_public_ip_address = true
+user_data =<<-EOF
+#!/bin/bash
+apt update -y
+apt install nginx -y
+systemctl start nginx
+systemctl enable nginx
+EOF

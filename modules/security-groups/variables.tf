@@ -16,7 +16,6 @@ variable "security_group_name" {
   type        = string
 }
 variable "rules" {
-  description = "List of ingress rules for the security group"
   type        = list(object({
     type = string
     cidr_blocks              = optional(list(string))
