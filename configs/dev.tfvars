@@ -11,25 +11,32 @@ data_subnets_cidr_block=["10.0.11.0/24","10.0.12.0/24"]
 # enable_nat = "true"
 
 # security groups variables
-first_security_group_name = "public-sg"
+public_security_group_name = "public-sg"
 
-first_sg_ingress_rules = [
+public_sg_rules = [
   {
+    type = "ingress"
     cidr_blocks              = ["0.0.0.0/0"]
     from_port                = 22
     protocol                 = "tcp"
     to_port                  = 22
   },
   {
+    type = "ingress"
     cidr_blocks              = ["0.0.0.0/0"]
     from_port                = 80
     protocol                 = "tcp"
     to_port                  = 80
-  }
-]
-
-first_sg_egress_rules = [
+  },
+   {
+    type = "ingress"
+    cidr_blocks              = ["0.0.0.0/0"]
+    from_port                = 443
+    protocol                 = "tcp"
+    to_port                  = 443
+  },
   {
+    type = "egress"
     cidr_blocks = ["0.0.0.0/0"]
     from_port   = 0
     protocol    = "-1"
@@ -37,35 +44,43 @@ first_sg_egress_rules = [
   }
 ]
 
-second_security_group_name = "application-sg"
+application_security_group_name = "application-sg"
 
-second_sg_ingress_rules = [
+application_sg_rules = [
   {
+    type = "ingress"
     cidr_blocks              = ["0.0.0.0/0"]
     from_port                = 22
     protocol                 = "tcp"
     to_port                  = 22
   },
   {
-    # cidr_blocks              = [ ]
+    type = "ingress"
+    cidr_blocks              = ["0.0.0.0/0"]
+    from_port                = 80
+    protocol                 = "tcp"
+    to_port                  = 80
+  },
+   {
+    type = "ingress"
+    cidr_blocks              = ["0.0.0.0/0"]
+    from_port                = 443
+    protocol                 = "tcp"
+    to_port                  = 443
+  },
+  {
+    type = "ingress"
+    # cidr_blocks              = [""]
     from_port                = 5000
     protocol                 = "tcp"
     to_port                  = 5000
     source_security_group_id = ""
-  }
-]
-
-second_sg_egress_rules = [
+  },
   {
+    type = "egress"
     cidr_blocks = ["0.0.0.0/0"]
     from_port   = 0
     protocol    = "-1"
     to_port     = 0
   }
 ]
-# # nginx server instance
-# ami                         = "ami-0866a3c8686eaeeba"  
-# instance_type               = "t2.micro"
-# key_name                    = "public-key"
-# associate_public_ip_address = true
-# name = "nginx-server"

@@ -10,12 +10,13 @@ output "public_subnets_ids" {
 }
 
 
-output "security_group_1_id" {
+output "public_security_group_id" {
   description = "The IDs of the created security groups"
-  value = module.security_group_1.security_group_id
+  value       = module.public_security_group.security_group_id
 }
 
-output "security_group_2_id" {
+output "application_security_group_id" {
   description = "The IDs of the created security groups"
-  value = module.security_group_2.security_group_id
+  value       = module.application_security_group.security_group_id
 }
+
