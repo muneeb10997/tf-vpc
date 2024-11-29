@@ -1,7 +1,7 @@
-# Define the security group with for_each
+# Define the security group with count
 resource "aws_security_group" "sg" {
-  description = "Security group for ${var.security_group_name}"
-  vpc_id      = var.vpc_id
+  vpc_id = var.vpc_id
+  name   = "${var.identifier}-${var.security_group_name}-${terraform.workspace}"
   tags = {
     Name = "${var.identifier}-${var.security_group_name}-${terraform.workspace}"
   }

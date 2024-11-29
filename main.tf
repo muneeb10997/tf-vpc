@@ -6,10 +6,10 @@ module "vpc" {
   public_subnets_cidr_block      = var.public_subnets_cidr_block
   application_subnets_cidr_block = var.application_subnets_cidr_block
   data_subnets_cidr_block        = var.data_subnets_cidr_block
-  # enable_nat = var.enable_nat
+  enable_nat = var.enable_nat
 }
 
-# using security group module to create security group 
+#public-sg
 module "public_security_group" {
   source              = "./modules/security-groups"
   identifier          = var.identifier
@@ -18,7 +18,7 @@ module "public_security_group" {
   rules               = var.public_sg_rules
 }
 
-# using same security group module for creating another security group with different variables
+# application-sg
 module "application_security_group" {
   source                   = "./modules/security-groups"
   identifier               = var.identifier
@@ -29,17 +29,78 @@ module "application_security_group" {
   depends_on               = [module.public_security_group]
 }
 
-# creating instance form instance module along with user_data 
-module "instance" {
+# data-sg
+module "data_security_group" {
+  source                   = "./modules/security-groups"
+  identifier               = var.identifier
+  vpc_id                   = module.vpc.vpc_id
+  security_group_name      = var.data_security_group_name
+  rules                    = var.data_sg_rules
+  source_security_group_id = module.application_security_group.security_group_id
+  depends_on               = [module.application_security_group]
+}
+
+
+# public ec2 
+module "public_instance" {
   source                      = "./modules/instance"
   identifier                  = var.identifier
-  name_instance               = var.name_instance
+  name_instance               = var.name_instance_public
   ami                         = var.ami
   instance_type               = var.instance_type
   key_name                    = var.key_name
-  user_data                   = file("./user_data.sh")
+  user_data                   = file("./public_ec2_user_data.sh")
   subnet_id                   = module.vpc.public_subnets_ids[0]
   vpc_security_group_ids      = [module.public_security_group.security_group_id]
-  associate_public_ip_address = var.associate_public_ip_address
+  associate_public_ip_address = var.associate_public_ip_address_public
   depends_on                  = [module.public_security_group, module.vpc]
+}
+
+# application ec2
+module "application_instance" {
+  source                      = "./modules/instance"
+  identifier                  = var.identifier
+  name_instance               = var.name_instance_application
+  ami                         = var.ami
+  instance_type               = var.instance_type
+  key_name                    = var.key_name
+  user_data                   = file("./application_ec2_user_data.sh")
+  subnet_id                   = module.vpc.application_subnets_ids[0]
+  vpc_security_group_ids      = [module.application_security_group.security_group_id]
+  associate_public_ip_address = var.associate_public_ip_address_application
+  depends_on                  = [module.application_security_group, module.vpc]
+}
+
+# data ec2
+module "data_instance" {
+  source                      = "./modules/instance"
+  identifier                  = var.identifier
+  name_instance               = var.name_instance_data
+  ami                         = var.ami
+  instance_type               = var.instance_type
+  key_name                    = var.key_name
+  user_data                   = file("./data_ec2_user_data.sh")
+  subnet_id                   = module.vpc.data_subnets_ids[0]
+  vpc_security_group_ids      = [module.data_security_group.security_group_id]
+  associate_public_ip_address = var.associate_public_ip_address_data
+  depends_on                  = [module.data_security_group, module.vpc]
+}
+
+module "Load_balancer" {
+  source             = "./modules/Load_balancer"
+  identifier         = var.identifier
+  vpc_id             = module.vpc.vpc_id
+  load_balancer_name = var.alb_name
+  load_balancer_type = var.alb_load_balancer_type
+  internal           = var.alb_internal
+  subnets            = module.vpc.public_subnets_ids
+  security_groups    = [module.public_security_group.security_group_id]
+  target_group_name  = var.alb_target_group_name
+  target_type        = var.alb_target_type
+  port               = var.alb_target_port
+  protocol           = var.alb_target_protocol
+  health_check_path  = var.alb_health_check_path
+  listener_port      = var.alb_listener_port
+  listener_protocol  = var.alb_listener_protocol
+  depends_on         = [module.application_security_group, module.vpc]
 }
