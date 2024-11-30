@@ -60,3 +60,11 @@ variable "listener_protocol" {
   type = string
   #   default     = "HTTP" 
 }
+
+variable "target_instance_id" {
+  type = string
+}
+
+variable "target_instance_port" {
+  type = number
+}

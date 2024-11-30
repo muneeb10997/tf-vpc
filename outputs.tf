@@ -33,3 +33,6 @@ output "public_instance_public_ip" {
   value = module.public_instance.instance_public_ip
 }
 
+output "application_instance_id" {
+  value = module.application_instance.instance_id
+}

@@ -170,3 +170,8 @@ variable "alb_listener_protocol" {
   type = string
   #   default     = "HTTP"  
 }
+
+
+variable "target_instance_port" {
+  type = string
+}

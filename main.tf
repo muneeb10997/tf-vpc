@@ -6,7 +6,7 @@ module "vpc" {
   public_subnets_cidr_block      = var.public_subnets_cidr_block
   application_subnets_cidr_block = var.application_subnets_cidr_block
   data_subnets_cidr_block        = var.data_subnets_cidr_block
-  enable_nat = var.enable_nat
+  enable_nat                     = var.enable_nat
 }
 
 #public-sg
@@ -87,20 +87,22 @@ module "data_instance" {
 }
 
 module "Load_balancer" {
-  source             = "./modules/Load_balancer"
-  identifier         = var.identifier
-  vpc_id             = module.vpc.vpc_id
-  load_balancer_name = var.alb_name
-  load_balancer_type = var.alb_load_balancer_type
-  internal           = var.alb_internal
-  subnets            = module.vpc.public_subnets_ids
-  security_groups    = [module.public_security_group.security_group_id]
-  target_group_name  = var.alb_target_group_name
-  target_type        = var.alb_target_type
-  port               = var.alb_target_port
-  protocol           = var.alb_target_protocol
-  health_check_path  = var.alb_health_check_path
-  listener_port      = var.alb_listener_port
-  listener_protocol  = var.alb_listener_protocol
-  depends_on         = [module.application_security_group, module.vpc]
+  source               = "./modules/Load_balancer"
+  identifier           = var.identifier
+  vpc_id               = module.vpc.vpc_id
+  load_balancer_name   = var.alb_name
+  load_balancer_type   = var.alb_load_balancer_type
+  internal             = var.alb_internal
+  subnets              = module.vpc.public_subnets_ids
+  security_groups      = [module.public_security_group.security_group_id]
+  target_group_name    = var.alb_target_group_name
+  target_type          = var.alb_target_type
+  port                 = var.alb_target_port
+  protocol             = var.alb_target_protocol
+  health_check_path    = var.alb_health_check_path
+  listener_port        = var.alb_listener_port
+  listener_protocol    = var.alb_listener_protocol
+  target_instance_id   = module.application_instance.instance_id
+  target_instance_port = var.target_instance_port
+  depends_on           = [module.application_security_group, module.vpc]
 }

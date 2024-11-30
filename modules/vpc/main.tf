@@ -110,6 +110,12 @@ resource "aws_route_table" "data_RT" {
     Name = "${var.identifier}-data_RT-${terraform.workspace}"
   }
 }
+resource "aws_route" "route_nat" {
+  count                  = var.enable_nat == true ? 1 : 0
+  route_table_id         = aws_route_table.data_RT.id
+  nat_gateway_id         = aws_nat_gateway.nat[0].id
+  destination_cidr_block = "0.0.0.0/0"
+}
 
 # Public Subnet Route Table with Subnet assosiation
 resource "aws_route_table_association" "public-subnet-assosiation" {

@@ -54,6 +54,13 @@ application_sg_rules = [
     to_port     = 22
   },
   {
+    type        = "ingress"
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = -1
+    protocol    = "icmp"
+    to_port     = -1
+  },
+  {
     type = "ingress"
     # cidr_blocks              = [""]
     from_port                = 5000
@@ -87,6 +94,13 @@ data_sg_rules = [
     protocol                 = "tcp"
     to_port                  = 3306
     source_security_group_id = ""
+  },
+  {
+    type        = "ingress"
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = -1
+    protocol    = "icmp"
+    to_port     = -1
   },
   {
     type        = "egress"
@@ -136,3 +150,4 @@ alb_target_protocol    = "HTTP"
 alb_health_check_path  = "/health"
 alb_listener_port      = 80
 alb_listener_protocol  = "HTTP"
+target_instance_port   = 5000
