@@ -49,7 +49,7 @@ module "public_instance" {
   ami                         = var.ami
   instance_type               = var.instance_type
   key_name                    = var.key_name
-  user_data                   = file("./public_ec2_user_data.sh")
+  user_data                   = file("./user_data_configs/public_ec2_user_data.sh")
   subnet_id                   = module.vpc.public_subnets_ids[0]
   vpc_security_group_ids      = [module.public_security_group.security_group_id]
   associate_public_ip_address = var.associate_public_ip_address_public
@@ -64,7 +64,7 @@ module "application_instance" {
   ami                         = var.ami
   instance_type               = var.instance_type
   key_name                    = var.key_name
-  user_data                   = file("./application_ec2_user_data.sh")
+  user_data                   = file("./user_data_configs/application_ec2_user_data.sh")
   subnet_id                   = module.vpc.application_subnets_ids[0]
   vpc_security_group_ids      = [module.application_security_group.security_group_id]
   associate_public_ip_address = var.associate_public_ip_address_application
@@ -79,7 +79,7 @@ module "data_instance" {
   ami                         = var.ami
   instance_type               = var.instance_type
   key_name                    = var.key_name
-  user_data                   = file("./data_ec2_user_data.sh")
+  user_data                   = file("./user_data_configs/data_ec2_user_data.sh")
   subnet_id                   = module.vpc.data_subnets_ids[0]
   vpc_security_group_ids      = [module.data_security_group.security_group_id]
   associate_public_ip_address = var.associate_public_ip_address_data

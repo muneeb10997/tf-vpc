@@ -1,9 +1,0 @@
-sudo chown $USER:$USER app.py
-ubuntu@ip-10-0-10-245:~/backend$ sudo chown $USER:$USER .
-
-ubuntu@ip-10-0-1-94:~/AWS-3tier-todo-application-frontend$ ps aux | grep python
-sudo kill 1285 
-
-sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
-
-bind address == 0.0.0.0
