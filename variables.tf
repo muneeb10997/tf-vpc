@@ -130,12 +130,10 @@ variable "alb_name" {
 
 variable "alb_load_balancer_type" {
   type    = string
-  default = "application"
 }
 
 variable "alb_internal" {
   type    = bool
-  default = false
 }
 
 variable "alb_target_group_name" {
@@ -144,7 +142,6 @@ variable "alb_target_group_name" {
 
 variable "alb_target_type" {
   type    = string
-  default = "alb"
 }
 
 variable "alb_target_port" {
@@ -153,22 +150,25 @@ variable "alb_target_port" {
 
 variable "alb_target_protocol" {
   type = string
-  #   default     = "HTTP"  
 }
 
-variable "alb_health_check_path" {
-  type = string
-  #   default     = "/health"  
+variable "alb_target_health_check_config" {
+  type = object({
+    path                = string
+    interval            = number
+    timeout             = number
+    healthy_threshold   = number
+    unhealthy_threshold = number
+  })
 }
+
 
 variable "alb_listener_port" {
   type = number
-  #   default     = 80  
 }
 
 variable "alb_listener_protocol" {
   type = string
-  #   default     = "HTTP"  
 }
 
 

@@ -99,7 +99,7 @@ module "Load_balancer" {
   target_type          = var.alb_target_type
   port                 = var.alb_target_port
   protocol             = var.alb_target_protocol
-  health_check_path    = var.alb_health_check_path
+  health_check_config  = var.alb_target_health_check_config
   listener_port        = var.alb_listener_port
   listener_protocol    = var.alb_listener_protocol
   target_instance_id   = module.application_instance.instance_id

@@ -147,7 +147,14 @@ alb_target_group_name  = "backend-target"
 alb_target_type        = "instance"
 alb_target_port        = 5000
 alb_target_protocol    = "HTTP"
-alb_health_check_path  = "/health"
 alb_listener_port      = 80
 alb_listener_protocol  = "HTTP"
 target_instance_port   = 5000
+
+alb_target_health_check_config={
+  path = "/health"
+  interval            = 60
+  timeout             = 30
+  healthy_threshold   = 2
+  unhealthy_threshold = 2
+}

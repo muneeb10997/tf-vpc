@@ -46,9 +46,15 @@ variable "vpc_id" {
   type = string
 }
 
-variable "health_check_path" {
-  type = string
-  #   default     = "/health"  
+variable "health_check_config" {
+  description = "Health check configuration"
+  type = object({
+    path                = string
+    interval            = number
+    timeout             = number
+    healthy_threshold   = number
+    unhealthy_threshold = number
+  })
 }
 
 variable "listener_port" {
