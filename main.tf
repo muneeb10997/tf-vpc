@@ -104,5 +104,6 @@ module "Load_balancer" {
   listener_protocol    = var.alb_listener_protocol
   target_instance_id   = module.application_instance.instance_id
   target_instance_port = var.target_instance_port
-  depends_on           = [module.application_security_group, module.vpc]
+  depends_on           = [module.application_security_group, module.vpc] 
+  
 }
