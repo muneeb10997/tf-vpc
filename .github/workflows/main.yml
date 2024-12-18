@@ -5,20 +5,25 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write  # Allows OIDC token usage
+  contents: read   # Allows reading the repo content
+
 jobs:
   terraform:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2 
+        uses: actions/checkout@v2
 
       - name: Set up AWS credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v3
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ${{ secrets.AWS_REGION }}
-    
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}  # Make sure AWS_ROLE_ARN is set correctly in GitHub secrets
+          aws-region: ${{ secrets.AWS_REGION }}        # Make sure AWS_REGION is set correctly in GitHub secrets
+          audience: sts.amazonaws.com  # Add audience to use OIDC
+
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v1
         with:
