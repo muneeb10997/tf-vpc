@@ -1,0 +1,53 @@
+name: Terraform CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up AWS credentials using OIDC (no need for hardcoded secrets)
+      - name: Set up AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-session-name: GitHubActionsSession
+          web-identity-token-file: /tmp/aws-oidc-token
+
+      # Install Terraform
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.5.3  # Specify the version of Terraform you want to use
+
+      # Initialize Terraform
+      - name: Terraform Init
+        run: terraform init -backend-config=backend.tf
+
+      # Validate Terraform configuration
+      - name: Terraform Validate
+        run: terraform validate
+
+      # Run Terraform Plan to check what will be created/modified
+      - name: Terraform Plan
+        run: terraform plan -var-file=configs/dev.tfvars
+
+      # Apply Terraform Plan to provision infrastructure
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -var-file=configs/dev.tfvars
+
+      # Output terraform state (optional, but can be helpful for debugging)
+      - name: Terraform Output
+        run: terraform output
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve -var-file=configs/dev.tfvars
