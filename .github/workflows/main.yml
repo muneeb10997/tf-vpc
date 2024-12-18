@@ -17,12 +17,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up AWS credentials using OIDC
+      - name: Configure AWS credentials
+        id: aws-creds
         uses: aws-actions/configure-aws-credentials@v3
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}  # Make sure AWS_ROLE_ARN is set correctly in GitHub secrets
-          aws-region: ${{ secrets.AWS_REGION }}        # Make sure AWS_REGION is set correctly in GitHub secrets
-          audience: sts.amazonaws.com  # Add audience to use OIDC
+          role-to-assume: arn:aws:iam::354918400547:role/Github-tf-role
+          aws-region: us-east-1
 
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v1
