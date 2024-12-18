@@ -18,7 +18,6 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ secrets.AWS_REGION }}
-          audience: sts.amazonaws.com
     
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v1
