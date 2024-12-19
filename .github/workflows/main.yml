@@ -4,15 +4,6 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
-    inputs:
-      action:
-        description: 'Do you want to apply or destroy?'
-        required: true
-        type: choice
-        options:
-          - apply
-          - destroy
 
 permissions:
   id-token: write  # Allows OIDC token usage
@@ -45,7 +36,6 @@ jobs:
         run: terraform plan -var-file=configs/dev.tfvars
 
       - name: Manual Approval to Apply
-        if: ${{ github.event.inputs.action == 'apply' }}
         run: |
           echo "Do you want to proceed with Terraform Apply? Type 'yes' to proceed or 'no' to stop."
           read -p "Enter your choice: " approval
@@ -57,11 +47,9 @@ jobs:
           fi
 
       - name: Terraform Apply
-        if: ${{ github.event.inputs.action == 'apply' }}
         run: terraform apply -var-file=configs/dev.tfvars -auto-approve
 
       - name: Manual Approval to Destroy
-        if: ${{ github.event.inputs.action == 'destroy' }}
         run: |
           echo "Do you want to proceed with Terraform Destroy? Type 'yes' to proceed or 'no' to stop."
           read -p "Enter your choice: " approval
@@ -73,5 +61,4 @@ jobs:
           fi
 
       - name: Terraform Destroy
-        if: ${{ github.event.inputs.action == 'destroy' }}
         run: terraform destroy -var-file=configs/dev.tfvars -auto-approve
