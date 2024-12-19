@@ -6,20 +6,13 @@ on:
       - main
   workflow_dispatch:
     inputs:
-      apply_approval:
-        description: 'Do you want to proceed with Terraform Apply? (yes/no)'
+      action:
+        description: 'Do you want to apply or destroy?'
         required: true
         type: choice
         options:
-          - yes
-          - no
-      destroy_approval:
-        description: 'Do you want to proceed with Terraform Destroy? (yes/no)'
-        required: true
-        type: choice
-        options:
-          - yes
-          - no
+          - apply
+          - destroy
 
 permissions:
   id-token: write  # Allows OIDC token usage
@@ -51,10 +44,34 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -var-file=configs/dev.tfvars
 
-      - name: Terraform Apply (Manual Approval)
-        if: ${{ github.event.inputs.apply_approval == 'yes' }}
+      - name: Manual Approval to Apply
+        if: ${{ github.event.inputs.action == 'apply' }}
+        run: |
+          echo "Do you want to proceed with Terraform Apply? Type 'yes' to proceed or 'no' to stop."
+          read -p "Enter your choice: " approval
+          if [[ "$approval" == "yes" ]]; then
+            echo "Proceeding with Terraform Apply"
+          else
+            echo "Aborting Apply"
+            exit 1  # This will stop the pipeline if "no" is entered
+          fi
+
+      - name: Terraform Apply
+        if: ${{ github.event.inputs.action == 'apply' }}
         run: terraform apply -var-file=configs/dev.tfvars -auto-approve
 
-      - name: Terraform Destroy (Manual Approval)
-        if: ${{ github.event.inputs.destroy_approval == 'yes' }}
+      - name: Manual Approval to Destroy
+        if: ${{ github.event.inputs.action == 'destroy' }}
+        run: |
+          echo "Do you want to proceed with Terraform Destroy? Type 'yes' to proceed or 'no' to stop."
+          read -p "Enter your choice: " approval
+          if [[ "$approval" == "yes" ]]; then
+            echo "Proceeding with Terraform Destroy"
+          else
+            echo "Aborting Destroy"
+            exit 1  # This will stop the pipeline if "no" is entered
+          fi
+
+      - name: Terraform Destroy
+        if: ${{ github.event.inputs.action == 'destroy' }}
         run: terraform destroy -var-file=configs/dev.tfvars -auto-approve
