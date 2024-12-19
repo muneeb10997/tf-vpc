@@ -21,6 +21,10 @@ on:
           - yes
           - no
 
+permissions:
+  id-token: write  # Allows OIDC token usage
+  contents: read   # Allows reading the repo content
+
 jobs:
   terraform:
     runs-on: ubuntu-latest
