@@ -18,6 +18,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Configure AWS credentials
+        id: aws-creds
         uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: arn:aws:iam::354918400547:role/Github-tf-role
@@ -33,32 +34,11 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        run: terraform plan -var-file=configs/dev.tfvars
-
-      - name: Manual Approval to Apply
-        run: |
-          echo "Do you want to proceed with Terraform Apply? Type 'yes' to proceed or 'no' to stop."
-          read -p "Enter your choice: " approval
-          if [[ "$approval" == "yes" ]]; then
-            echo "Proceeding with Terraform Apply"
-          else
-            echo "Aborting Apply"
-            exit 1  # This will stop the pipeline if "no" is entered
-          fi
+        run: terraform plan -var-file=configs/dev.tfvars  
 
       - name: Terraform Apply
-        run: terraform apply -var-file=configs/dev.tfvars -auto-approve
+        run: terraform apply -var-file=configs/dev.tfvars -auto-approve  
 
-      - name: Manual Approval to Destroy
+      - name: Terraform Destroy (after creation)
         run: |
-          echo "Do you want to proceed with Terraform Destroy? Type 'yes' to proceed or 'no' to stop."
-          read -p "Enter your choice: " approval
-          if [[ "$approval" == "yes" ]]; then
-            echo "Proceeding with Terraform Destroy"
-          else
-            echo "Aborting Destroy"
-            exit 1  # This will stop the pipeline if "no" is entered
-          fi
-
-      - name: Terraform Destroy
-        run: terraform destroy -var-file=configs/dev.tfvars -auto-approve
+          terraform destroy -var-file=configs/dev.tfvars -auto-approve
