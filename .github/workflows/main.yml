@@ -6,14 +6,20 @@ on:
       - main
   workflow_dispatch:
     inputs:
-      action:
-        description: 'Type "yes" to apply and destroy, or "no" to skip'
+      apply_approval:
+        description: 'Do you want to proceed with Terraform Apply? (yes/no)'
         required: true
-        default: 'no'
-
-permissions:
-  id-token: write
-  contents: read
+        type: choice
+        options:
+          - yes
+          - no
+      destroy_approval:
+        description: 'Do you want to proceed with Terraform Destroy? (yes/no)'
+        required: true
+        type: choice
+        options:
+          - yes
+          - no
 
 jobs:
   terraform:
@@ -24,11 +30,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Configure AWS credentials
-        id: aws-creds
         uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: arn:aws:iam::354918400547:role/Github-tf-role
           aws-region: us-east-1
+          audience: sts.amazonaws.com
 
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v1
@@ -41,38 +47,10 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -var-file=configs/dev.tfvars
 
-      # Manual approval for Apply
-      - name: Wait for Apply approval
-        id: apply-approval
-        run: |
-          echo "Do you want to proceed with Terraform Apply? Type 'yes' to proceed or 'no' to stop."
-          read -p "Enter your choice: " approval
-          if [ "$approval" == "yes" ]; then
-            echo "Proceeding with Terraform Apply"
-            echo "::set-output name=action::apply"
-          else
-            echo "Aborting Apply"
-            exit 1  # This will stop the pipeline if "no" is entered
-        shell: bash
+      - name: Terraform Apply (Manual Approval)
+        if: ${{ github.event.inputs.apply_approval == 'yes' }}
+        run: terraform apply -var-file=configs/dev.tfvars -auto-approve
 
-      - name: Terraform Apply
-        run: terraform apply -var-file=configs/dev.tfvars
-        if: steps.apply-approval.outputs.action == 'apply'
-
-      # Manual approval for Destroy after Apply is successful
-      - name: Wait for Destroy approval
-        id: destroy-approval
-        run: |
-          echo "Do you want to proceed with Terraform Destroy? Type 'yes' to destroy or 'no' to skip."
-          read -p "Enter your choice: " destroy_approval
-          if [ "$destroy_approval" == "yes" ]; then
-            echo "Proceeding with Terraform Destroy"
-            echo "::set-output name=action::destroy"
-          else
-            echo "Skipping Destroy"
-            exit 0  # Skip the destroy process if "no" is entered
-        shell: bash
-
-      - name: Terraform Destroy
-        run: terraform destroy -var-file=configs/dev.tfvars
-        if: steps.destroy-approval.outputs.action == 'destroy'
+      - name: Terraform Destroy (Manual Approval)
+        if: ${{ github.event.inputs.destroy_approval == 'yes' }}
+        run: terraform destroy -var-file=configs/dev.tfvars -auto-approve
