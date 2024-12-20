@@ -6,8 +6,8 @@ on:
       - main
 
 permissions:
-  id-token: write  # Allows OIDC token usage
-  contents: read   # Allows reading the repo content
+  id-token: write 
+  contents: read  
 
 jobs:
   terraform:
@@ -43,6 +43,6 @@ jobs:
       # - name: Terraform Apply
       #   run: terraform apply -var-file=configs/dev.tfvars -auto-approve  
 
-      # - name: Terraform Destroy (after creation)
+      # - name: Terraform Destroy 
       #   run: |
       #     terraform destroy -var-file=configs/dev.tfvars -auto-approve
