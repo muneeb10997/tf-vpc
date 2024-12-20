@@ -32,13 +32,17 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-
+        
+      - name: Terraform Workspace create or select
+        run: |
+          terraform workspace select dev || terraform workspace new dev
+          
       - name: Terraform Plan
         run: terraform plan -var-file=configs/dev.tfvars  
 
-      - name: Terraform Apply
-        run: terraform apply -var-file=configs/dev.tfvars -auto-approve  
+      # - name: Terraform Apply
+      #   run: terraform apply -var-file=configs/dev.tfvars -auto-approve  
 
-      - name: Terraform Destroy (after creation)
-        run: |
-          terraform destroy -var-file=configs/dev.tfvars -auto-approve
+      # - name: Terraform Destroy (after creation)
+      #   run: |
+      #     terraform destroy -var-file=configs/dev.tfvars -auto-approve
